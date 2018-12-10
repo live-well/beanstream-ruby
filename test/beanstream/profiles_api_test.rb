@@ -85,8 +85,8 @@ module Beanstream
         result = Beanstream.ProfilesAPI.create_profile(profile)
         
         assert(ProfilesAPI.profile_successfully_created(result))
-        profile_id = result['customer_code']
-        puts "Created profile with ID: #{profile_id}"
+        # profile_id = result['customer_code']
+        # puts "Created profile with ID: #{profile_id}"
       rescue BeanstreamException
         assert(false)
       end
@@ -104,7 +104,7 @@ module Beanstream
             :cvd => "123"
           }
         )
-        puts "token result: #{token}"
+        # puts "token result: #{token}"
         assert(token != nil)
         
         profile = Beanstream.ProfilesAPI.getCreateProfileWithTokenTemplate()
@@ -122,8 +122,8 @@ module Beanstream
         result = Beanstream.ProfilesAPI.create_profile(profile)
         
         assert(ProfilesAPI.profile_successfully_created(result))
-        profile_id = result['customer_code']
-        puts "Created profile with ID: #{profile_id}"
+        # profile_id = result['customer_code']
+        # puts "Created profile with ID: #{profile_id}"
       rescue BeanstreamException
         assert(false)
       end
@@ -157,12 +157,12 @@ module Beanstream
       })
       assert(ProfilesAPI.profile_successfully_created(result))
       profile_id = result['customer_code']
-      puts "Created profile with ID: #{profile_id}"
+      # puts "Created profile with ID: #{profile_id}"
 
       # now delete the profile
       result = Beanstream.ProfilesAPI.delete_profile(profile_id)
       assert(ProfilesAPI.profile_successfully_deleted(result))
-      puts "Deleted profile #{result['customer_code']}"
+      # puts "Deleted profile #{result['customer_code']}"
     end
 
   # Profile GET
@@ -193,7 +193,7 @@ module Beanstream
       })
       assert(ProfilesAPI.profile_successfully_created(result))
       profile_id = result['customer_code']
-      puts "Created profile with ID: #{profile_id}"
+      # puts "Created profile with ID: #{profile_id}"
 
       # now get that profile
       result = Beanstream.ProfilesAPI.get_profile(profile_id)
@@ -231,13 +231,13 @@ module Beanstream
       })
       assert(ProfilesAPI.profile_successfully_created(result))
       profile_id = result['customer_code']
-      puts "Created profile with ID: #{profile_id}"
+      # puts "Created profile with ID: #{profile_id}"
 
       # now get that profile
       profile1 = Beanstream.ProfilesAPI.get_profile(profile_id)
       assert(profile1 != nil)
       assert(profile1['billing']['name'] == "Hilary Test")
-      puts "\n\nRetrieved Profile 1:\n\n #{profile1}"
+      # puts "\n\nRetrieved Profile 1:\n\n #{profile1}"
 
       #update profile
       profile1['billing']['name'] = "gizmo test"
@@ -252,7 +252,7 @@ module Beanstream
 
       #get profile again and check the updates
       profile2 = Beanstream.ProfilesAPI.get_profile(profile_id)
-      puts "\n\nRetrieved Profile 2:\n\n #{profile2}"
+      # puts "\n\nRetrieved Profile 2:\n\n #{profile2}"
       assert(profile2 != nil)
       assert(profile2['billing']['name'] == "gizmo test")
       assert(profile2['language'] == "en")
@@ -324,9 +324,9 @@ module Beanstream
         })
         assert(ProfilesAPI.profile_successfully_created(result))
         profile_id = result['customer_code']
-        puts "Created profile with ID: #{profile_id}"
-      rescue BeanstreamException => ex
-        puts "Error: #{ex.user_facing_message()}"
+        # puts "Created profile with ID: #{profile_id}"
+      rescue BeanstreamException
+        # puts "Error: #{ex.user_facing_message()}"
         assert(false)
       end
       
@@ -336,8 +336,8 @@ module Beanstream
         profile_payment[:payment_profile][:customer_code] = profile_id
         profile_payment[:amount] = 77.50
         result = Beanstream.PaymentsAPI.make_payment(profile_payment)
-      rescue BeanstreamException => ex
-        puts "Error: #{ex.user_facing_message()}"
+      rescue BeanstreamException
+        # puts "Error: #{ex.user_facing_message()}"
         assert(false) #declined
       end
       
@@ -351,10 +351,9 @@ module Beanstream
         
         #complete pre-auth
         result = Beanstream.PaymentsAPI.complete_preauth(result['id'], 40.50)
-        puts "completion result: #{result}"
+        # puts "completion result: #{result}"
         assert(PaymentsAPI.payment_approved(result))
-      rescue BeanstreamException => ex
-        puts "Error: #{ex.user_facing_message()}"
+      rescue BeanstreamException
         assert(false) #declined
       end
     end

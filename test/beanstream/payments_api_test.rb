@@ -6,8 +6,8 @@ module Beanstream
   
   class PaymentsAPITest < Test::Unit::TestCase
 
-    should "canary test print out Beanstream!" do
-      puts "Beanstream!"
+    should "canary test" do
+      # puts "Beanstream!"
       assert true
     end
 	
@@ -49,11 +49,11 @@ module Beanstream
           }
         }
       )
-      puts "result: #{result}"
+      # puts "result: #{result}"
       
       assert(PaymentsAPI.payment_approved(result))
-      transaction_id = result['id']
-      puts "TransactionId: #{transaction_id}"
+      # transaction_id = result['id']
+      # puts "TransactionId: #{transaction_id}"
     end
     
     # Token purchase
@@ -67,7 +67,7 @@ module Beanstream
           :cvd => "123"
         }
       )
-      puts "token result: #{token}"
+      # puts "token result: #{token}"
       assert(token != nil)
 
       begin
@@ -83,7 +83,7 @@ module Beanstream
             }
           }
         )
-        puts "result: #{result}"
+        # puts "result: #{result}"
         assert(PaymentsAPI.payment_approved(result))
       rescue BeanstreamException
         assert(false)
@@ -95,7 +95,7 @@ module Beanstream
       
       decline = false
       begin
-        result = Beanstream.PaymentsAPI.make_payment(
+        Beanstream.PaymentsAPI.make_payment(
         {
           :order_number => PaymentsAPI.generateRandomOrderId("test"),
           :amount => 100,
@@ -109,11 +109,11 @@ module Beanstream
             :complete => true
           }
         })
-        puts "Success! TransactionID: #{result['id']}"
+        # puts "Success! TransactionID: #{result['id']}"
         
       rescue BeanstreamException => ex
         decline = true
-        puts "Exception: #{ex.user_facing_message}"
+
         assert(ex.user_facing_message == "DECLINE")
         assert(ex.is_user_error())
       end
@@ -142,18 +142,18 @@ module Beanstream
             }
           }
         )
-        puts "result: #{result}"
+        # puts "result: #{result}"
         assert(PaymentsAPI.payment_approved(result))
         transaction_id = result['id']
-        puts "TransactionId: #{transaction_id}"
+        # puts "TransactionId: #{transaction_id}"
         
         result = Beanstream.PaymentsAPI.complete_preauth(transaction_id, 59.50)
-        puts "completion result: #{result}"
+        # puts "completion result: #{result}"
         assert(PaymentsAPI.payment_approved(result))
       
       rescue BeanstreamException => ex
         decline = true
-        puts "Exception: #{ex.user_facing_message}"
+        # puts "Exception: #{ex.user_facing_message}"
         assert(ex.user_facing_message == "DECLINE")
         assert(ex.is_user_error())
       end
@@ -174,7 +174,7 @@ module Beanstream
           :cvd => "123"
         }
       )
-      puts "token result: #{token}"
+      # puts "token result: #{token}"
       assert(token != nil)
 
       # 2) make pre-auth
@@ -191,16 +191,16 @@ module Beanstream
             }
           }
         )
-        puts "result: #{result}"
+        # puts "result: #{result}"
         assert(PaymentsAPI.payment_approved(result))
         transaction_id = result['id']
 
         # 3) complete purchase
         result = Beanstream.PaymentsAPI.complete_preauth(transaction_id, 10.33)
-        puts "completion result: #{result}"
+        # puts "completion result: #{result}"
         assert(PaymentsAPI.payment_approved(result))
       rescue BeanstreamException
-        puts "card declined"
+        # puts "card declined"
         assert(false)
       end
     end
@@ -239,7 +239,7 @@ module Beanstream
       assert_equal 100.0, get_after_return["total_refunds"]
 
       # => try to void the payment after returning
-      assert_raises InvalidRequestException do
+      assert_raises BusinessRuleException do
         Beanstream.PaymentsAPI.void_payment(transaction_id, 100)
       end
     end
@@ -273,7 +273,7 @@ module Beanstream
       assert_equal "VP", get_after_void["adjusted_by"][0]["type"]
 
       # => try to return the payment after voiding
-      assert_raises InvalidRequestException do
+      assert_raises BusinessRuleException do
         Beanstream.PaymentsAPI.return_payment(transaction_id, 100)
       end
     end

@@ -62,26 +62,32 @@ module Beanstream
       rescue JSON::ParserError
         puts "Error parsing json error message"
       end
-      
-      if http_status_code == 302
-        raise InvalidRequestException.new(code, category, "Redirection for IOP and 3dSecure not supported by the Beanstream SDK yet. #{message}", http_status_code)
-      elsif http_status_code == 400
-        raise InvalidRequestException.new(code, category, message, http_status_code)
-      elsif code == 401
-        raise UnauthorizedException.new(code, category, message, http_status_code)
-      elsif code == 402
-        raise BusinessRuleException.new(code, category, message, http_status_code)
-      elsif code == 403
-        raise ForbiddenException.new(code, category, message, http_status_code)
-      elsif code == 405
-        raise InvalidRequestException.new(code, category, message, http_status_code)
-      elsif code == 415
-        raise InvalidRequestException.new(code, category, message, http_status_code)
-      elsif code >= 500
-        raise InternalServerException.new(code, category, message, http_status_code)
+
+      exception_type = case http_status_code
+      when 302
+        message = "Redirection for IOP and 3dSecure not supported by the Beanstream SDK yet. #{message}"
+        InvalidRequestException
+      when 400
+        InvalidRequestException
+      when 401
+        UnauthorizedException
+      when 402
+        BusinessRuleException
+      when 403
+        ForbiddenException
+      when 404
+        InvalidRequestException
+      when 405
+        InvalidRequestException
+      when 415
+        InvalidRequestException
+      when 500..599
+        InternalServerException
       else
-        raise BeanstreamException.new(code, category, message, http_status_code)
+        BeanstreamException
       end
+
+      raise exception_type.new(code, category, message, http_status_code)
     end
     
     def handle_restclient_error(e)
