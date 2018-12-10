@@ -40,7 +40,7 @@ module Beanstream
         "end_row" => end_row,
         "criteria" => criteria_hash
       }
-      puts "\n\nReport search query #{query}\n\n"
+      # puts "\n\nReport search query #{query}\n\n"
       val = transaction_post("POST", reports_url, Beanstream.merchant_id, Beanstream.reporting_api_key, query)
       val['records']
     end
