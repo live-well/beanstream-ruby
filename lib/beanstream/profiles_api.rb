@@ -34,7 +34,7 @@ module Beanstream
     
     # a template for a Secure Payment Profile
     def getProfileTemplate()
-      request = {
+      {
         :language=> "",
         :comments=> "",
         :billing=> {
@@ -70,17 +70,17 @@ module Beanstream
     end
     
     def create_profile(profile)
-      val = transaction_post("POST", profile_url, Beanstream.merchant_id, Beanstream.profiles_api_key, profile)
+      transaction_post("POST", profile_url, Beanstream.merchant_id, Beanstream.profiles_api_key, profile)
     end
     
     def delete_profile(profileId)
       delUrl = profile_url+"/"+profileId
-      val = transaction_post("DELETE", delUrl, Beanstream.merchant_id, Beanstream.profiles_api_key, nil)
+      transaction_post("DELETE", delUrl, Beanstream.merchant_id, Beanstream.profiles_api_key, nil)
     end
     
     def get_profile(profileId)
       getUrl = profile_url+"/"+profileId
-      val = transaction_post("GET", getUrl, Beanstream.merchant_id, Beanstream.profiles_api_key, nil)
+      transaction_post("GET", getUrl, Beanstream.merchant_id, Beanstream.profiles_api_key, nil)
     end
     
     def update_profile(profile)
@@ -89,35 +89,35 @@ module Beanstream
       if (profile['card'] != nil)
         profile.tap{ |h| h.delete('card') }
       end
-      val = transaction_post("PUT", getUrl, Beanstream.merchant_id, Beanstream.profiles_api_key, profile)
+      transaction_post("PUT", getUrl, Beanstream.merchant_id, Beanstream.profiles_api_key, profile)
     end
 
     def self.profile_successfully_created(response)
-      success = response['code'] == 1 && response['message'] == "Operation Successful"
+      response['code'] == 1 && response['message'] == "Operation Successful"
     end
     
     def self.profile_successfully_deleted(response)
-      success = response['code'] == 1 && response['message'] == "Operation Successful"
+      response['code'] == 1 && response['message'] == "Operation Successful"
     end
 
     def add_profile_card(profile,card)
       addCardUrl = profile_url + "/" + profile['customer_code'] + "/cards/"
-      val = transaction_post("POST", addCardUrl, Beanstream.merchant_id, Beanstream.profiles_api_key, card)
+      transaction_post("POST", addCardUrl, Beanstream.merchant_id, Beanstream.profiles_api_key, card)
     end
 
     def get_profile_card(profile)
       getCardUrl = profile_url + "/" + profile['customer_code'] + "/cards/"
-      val = transaction_post("get", getCardUrl, Beanstream.merchant_id, Beanstream.profiles_api_key)
+      transaction_post("get", getCardUrl, Beanstream.merchant_id, Beanstream.profiles_api_key)
     end
 
     def update_profile_card(profile,card_index,card)
       updateUrl = profile_url + "/" + profile['customer_code'] + "/cards/" + card_index.to_s
-      val = transaction_post("PUT", updateUrl, Beanstream.merchant_id, Beanstream.profiles_api_key, card)
+      transaction_post("PUT", updateUrl, Beanstream.merchant_id, Beanstream.profiles_api_key, card)
     end
 
     def delete_profile_card(profile,card_index)
       deleteUrl = profile_url + "/" + profile['customer_code'] + "/cards/" + card_index.to_s
-      val = transaction_post("DELETE", deleteUrl, Beanstream.merchant_id, Beanstream.profiles_api_key, nil)
+      transaction_post("DELETE", deleteUrl, Beanstream.merchant_id, Beanstream.profiles_api_key, nil)
     end
-	end
+  end
 end

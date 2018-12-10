@@ -85,7 +85,7 @@ module Beanstream
         )
         puts "result: #{result}"
         assert(PaymentsAPI.payment_approved(result))
-      rescue BeanstreamException => ex
+      rescue BeanstreamException
         assert(false)
       end
     end
@@ -199,7 +199,7 @@ module Beanstream
         result = Beanstream.PaymentsAPI.complete_preauth(transaction_id, 10.33)
         puts "completion result: #{result}"
         assert(PaymentsAPI.payment_approved(result))
-      rescue BeanstreamException => ex
+      rescue BeanstreamException
         puts "card declined"
         assert(false)
       end

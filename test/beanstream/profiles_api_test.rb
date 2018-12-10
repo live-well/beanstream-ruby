@@ -87,7 +87,7 @@ module Beanstream
         assert(ProfilesAPI.profile_successfully_created(result))
         profile_id = result['customer_code']
         puts "Created profile with ID: #{profile_id}"
-      rescue BeanstreamException => ex
+      rescue BeanstreamException
         assert(false)
       end
     end
@@ -124,7 +124,7 @@ module Beanstream
         assert(ProfilesAPI.profile_successfully_created(result))
         profile_id = result['customer_code']
         puts "Created profile with ID: #{profile_id}"
-      rescue BeanstreamException => ex
+      rescue BeanstreamException
         assert(false)
       end
     end
@@ -274,7 +274,7 @@ module Beanstream
     end
 
     should 'Successfully get Card' do
-      add_card = Beanstream.ProfilesAPI.add_profile_card(@profile,@card1)
+      Beanstream.ProfilesAPI.add_profile_card(@profile,@card1)
       card = Beanstream.ProfilesAPI.get_profile_card(@profile)
       assert(card)
       assert(card['message']== 'Operation Successful')
@@ -282,16 +282,16 @@ module Beanstream
 
     should 'successfully update card' do
       # Create profile with card 1  
-      insert_card = Beanstream.ProfilesAPI.add_profile_card(@profile,@card2)
+      Beanstream.ProfilesAPI.add_profile_card(@profile,@card2)
       # Update profile with card 2
       update_card = Beanstream.ProfilesAPI.update_profile_card(@profile,1,@card1)
-      profile2 = Beanstream.ProfilesAPI.get_profile(@profile['customer_code'])
+      Beanstream.ProfilesAPI.get_profile(@profile['customer_code'])
       assert(update_card['message']== 'Operation Successful')
     end
 
     should 'successfully delete card' do
       # Create profile with card 1  
-      insert_card = Beanstream.ProfilesAPI.add_profile_card(@profile,@card2)
+      Beanstream.ProfilesAPI.add_profile_card(@profile,@card2)
       # delete card from profile
       delete_card = Beanstream.ProfilesAPI.delete_profile_card(@profile,1)
       assert(delete_card['message']== 'Operation Successful')

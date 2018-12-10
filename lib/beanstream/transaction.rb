@@ -7,7 +7,7 @@ module Beanstream
     
     def encode(merchant_id, api_key)
       str = "#{merchant_id}:#{api_key}"
-      enc = Base64.encode64(str).gsub("\n", "")
+      Base64.encode64(str).gsub("\n", "")
     end
     
     def transaction_post(method, url_path, merchant_id, api_key, data={})
@@ -32,7 +32,7 @@ module Beanstream
       
       begin
         result = RestClient::Request.execute(req_params)
-        returns = JSON.parse(result)
+        JSON.parse(result)
       rescue RestClient::ExceptionWithResponse => ex
         if ex.response
           raise handle_api_error(ex)

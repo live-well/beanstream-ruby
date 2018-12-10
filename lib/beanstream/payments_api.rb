@@ -79,7 +79,7 @@ module Beanstream
     # +Required parameters+:: :amount, :order_number, :payment_method, and one of [:card, :token, :payment_profile] if not paying for Cash or Cheque.
     # Use PaymentMethods:: for the available payment_method options
     def getPaymentRequestTemplate()
-      request = {
+      {
         :order_number => "",
         :amount => 0,
         :language=> "",
@@ -126,23 +126,23 @@ module Beanstream
     # or getProfilePaymentRequestTemplate().
     # +PreAuth+:: For a pre-auth you must set the 'complete' parameter of the Card, Token, or Profile to be 'false'.
     def make_payment(payment)
-      val = transaction_post("POST", make_payment_url, Beanstream.merchant_id, Beanstream.payments_api_key, payment)
+      transaction_post("POST", make_payment_url, Beanstream.merchant_id, Beanstream.payments_api_key, payment)
     end
     
     def complete_preauth(transaciton_id, amount)
       complete_url = make_payment_url+transaciton_id+"/completions"
       completion = { :amount => amount }
-      val = transaction_post("POST", complete_url, Beanstream.merchant_id, Beanstream.payments_api_key, completion)
+      transaction_post("POST", complete_url, Beanstream.merchant_id, Beanstream.payments_api_key, completion)
     end
 
     def self.payment_approved(payment_response)
-      success = payment_response['approved'] == "1" && payment_response['message'] == "Approved"
+      payment_response['approved'] == "1" && payment_response['message'] == "Approved"
     end
     
     def get_legato_token(card_info)
       turl = "/scripts/tokenization/tokens"
       result = Transaction.new().transaction_post("POST", turl, "", "", card_info)
-      token = result['token']
+      result['token']
     end
 
     def get_transaction(transaction_id)

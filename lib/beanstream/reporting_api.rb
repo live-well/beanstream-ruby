@@ -42,7 +42,7 @@ module Beanstream
       }
       puts "\n\nReport search query #{query}\n\n"
       val = transaction_post("POST", reports_url, Beanstream.merchant_id, Beanstream.reporting_api_key, query)
-      results = val['records']
+      val['records']
     end
     
   end

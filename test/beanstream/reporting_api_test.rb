@@ -51,7 +51,6 @@ module Beanstream
       #make a 1st purchase
       result = Beanstream.PaymentsAPI.make_payment(purchase)
       assert(PaymentsAPI.payment_approved(result))
-      transaction_1_id = result['id']
       
       #make a 2nd purchase
       orderNum2 = PaymentsAPI.generateRandomOrderId(prefix)
@@ -60,7 +59,6 @@ module Beanstream
       purchase['order_number'] = orderNum2
       result = Beanstream.PaymentsAPI.make_payment(purchase)
       assert(PaymentsAPI.payment_approved(result))
-      transaction_2_id = result['id']
       
       #make a 3nd purchase
       orderNum3 = PaymentsAPI.generateRandomOrderId(prefix)
@@ -69,7 +67,6 @@ module Beanstream
       purchase['order_number'] = orderNum3
       result = Beanstream.PaymentsAPI.make_payment(purchase)
       assert(PaymentsAPI.payment_approved(result))
-      transaction_3_id = result['id']
       
       #search for transactions
       last3Hours = Time.now - 3*60*60
