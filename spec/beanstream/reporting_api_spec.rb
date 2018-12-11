@@ -1,0 +1,88 @@
+require 'beanstream'
+
+describe Beanstream::ReportingAPI do
+  before :each do
+    Beanstream.merchant_id = '300200578'
+    Beanstream.payments_api_key = '4BaD82D9197b4cc4b70a221911eE9f70'
+    Beanstream.reporting_api_key = '4e6Ff318bee64EA391609de89aD4CF5d'
+  end
+
+  it 'makes the correct reports URL' do
+    expect(Beanstream.ReportingAPI.reports_url).to eq('/v1/reports')
+  end
+
+  it 'successfully finds payments' do
+    prefix = SecureRandom.hex(4)
+    order_num1 = Beanstream::PaymentsAPI.generateRandomOrderId(prefix)
+    order_num2 = Beanstream::PaymentsAPI.generateRandomOrderId(prefix)
+    order_num3 = Beanstream::PaymentsAPI.generateRandomOrderId(prefix)
+
+    make_payment(prefix, order_num1, 100.0)
+    make_payment(prefix, order_num2, 33.29)
+    make_payment(prefix, order_num3, 21.55)
+
+    # Get all transactions within a time span
+    results = search(1, 3)
+    expect(results.length).to be(3)
+
+    # Find transaction by order number
+    results = search(
+      1,
+      10,
+      Beanstream::Criteria.new(Fields::OrderNumber, Operators::EQUALS, order_num1)
+    )
+    expect(results.length).to be(1)
+
+    # Find Transactions 2 and 3 by ref1 and amount
+    results = search(
+      1,
+      10,
+      [
+        Beanstream::Criteria.new(Fields::Ref1, Operators::EQUALS, prefix),
+        Beanstream::Criteria.new(Fields::Amount, Operators::LESS_THAN, 50)
+      ]
+    )
+    expect(results.length).to be(2)
+  end
+
+  def make_payment(prefix, order_number, amount)
+    purchase = payment_info(prefix, order_number, amount)
+
+    result = Beanstream.PaymentsAPI.make_payment(purchase)
+    expect(Beanstream::PaymentsAPI.payment_approved(result)).to be(true)
+  end
+
+  def search(start_row, stop_row, criteria = nil)
+    last_3_hours = Time.now.getlocal('-08:00') - 3 * 60 * 60
+    next_3_hours = Time.now.getlocal('-08:00') + 3 * 60 * 60
+
+    Beanstream.ReportingAPI.search_transactions(
+      last_3_hours,
+      next_3_hours,
+      start_row,
+      stop_row,
+      criteria
+    )
+  end
+
+  def payment_info(prefix, order_number, amount)
+    {
+      'order_number' => order_number,
+      'amount' => amount,
+      'payment_method' => Beanstream::PaymentMethods::CARD,
+      'card' => test_card,
+      'custom' => { 'ref1' => prefix }
+    }
+  end
+
+  def test_card
+    {
+      'name' => 'Mr. Card Testerson',
+      'number' => '4030000010001234',
+      'expiry_month' => '07',
+      'expiry_year' => '22',
+      'cvd' => '123',
+      'complete' => true
+    }
+  end
+end
