@@ -1,76 +1,71 @@
-
 module Beanstream
-  
   class ReportingAPI < Transaction
-
     def reports_url
-      "#{Beanstream.api_base_url()}/reports"
+      "#{Beanstream.api_base_url}/reports"
     end
-    
-    def search_transactions(start_date, end_date, start_row, end_row, criteria=nil)
-      if !start_date.is_a?(Time)
-        raise InvalidRequestException.new(0, 0, "start_date must be of type Time in ReportingApi.search_transactions", 0)
+
+    def search_transactions(start_date, end_date, start_row, end_row, criteria = nil)
+      unless start_date.is_a?(Time)
+        raise InvalidRequestException.new(0, 0, 'start_date must be of type Time in ReportingApi.search_transactions', 0)
       end
-      if !end_date.is_a?(Time)
-        raise InvalidRequestException.new(0, 0, "end_date must be of type Time in ReportingApi.search_transactions", 0)
+      unless end_date.is_a?(Time)
+        raise InvalidRequestException.new(0, 0, 'end_date must be of type Time in ReportingApi.search_transactions', 0)
       end
-      if criteria != nil && !criteria.kind_of?(Array) && !criteria.is_a?(Beanstream::Criteria)
+
+      if !criteria.nil? && !criteria.kind_of?(Array) && !criteria.is_a?(Beanstream::Criteria)
         puts "criteria was of type: #{criteria.class}"
-        raise InvalidRequestException.new(0, 0, "criteria must be of type Array<Critiera> or Criteria in ReportingApi.search_transactions", 0)
+        raise InvalidRequestException.new(0, 0, 'criteria must be of type Array<Critiera> or Criteria in ReportingApi.search_transactions', 0)
       end
       if criteria.is_a?(Beanstream::Criteria)
-        #make it an array
+        # make it an array
         criteria = Array[criteria]
       end
-      
-      startD = start_date.strftime "%Y-%m-%dT%H:%M:%S"
-      endD = end_date.strftime "%Y-%m-%dT%H:%M:%S"
-      
+
+      start_date = start_date.strftime '%Y-%m-%dT%H:%M:%S'
+      end_date = end_date.strftime '%Y-%m-%dT%H:%M:%S'
+
       criteria_hash = Array[]
-      if criteria != nil && criteria.length > 0
-        for c in criteria
+      if !criteria.nil? && !criteria.empty?
+        criteria.each do |c|
           criteria_hash << c.to_hash
         end
       end
       query = {
-        "name" => "Search",
-        "start_date" => startD,
-        "end_date" => endD,
-        "start_row" => start_row,
-        "end_row" => end_row,
-        "criteria" => criteria_hash
+        'name' => 'Search',
+        'start_date' => start_date,
+        'end_date' => end_date,
+        'start_row' => start_row,
+        'end_row' => end_row,
+        'criteria' => criteria_hash
       }
       # puts "\n\nReport search query #{query}\n\n"
-      val = transaction_post("POST", reports_url, Beanstream.merchant_id, Beanstream.reporting_api_key, query)
+      val = transaction_post('POST', reports_url, Beanstream.merchant_id, Beanstream.reporting_api_key, query)
       val['records']
     end
-    
   end
-  
+
   class Criteria
     attr_accessor :field, :operator, :value
-    
+
     def initialize(field, operator, value)
       @field = field
       @operator = operator
       @value = value
     end
-    
-    def to_hash()
-      {'field' => @field, 'operator' => @operator, 'value' => @value}
-    end
-    
-  end
 
+    def to_hash
+      { 'field' => @field, 'operator' => @operator, 'value' => @value }
+    end
+  end
 end
 
 module Operators
-  EQUALS = "%3D"
-  LESS_THAN = "%3C"
-  GREATER_THAN = "%3E"
-  LESS_THAN_EQUAL = "%3C%3D"
-  GREATER_THAN_EQUAL = "%3E%3D"
-  STARTS_WITH = "START%20WITH"
+  EQUALS = '%3D'.freeze
+  LESS_THAN = '%3C'.freeze
+  GREATER_THAN = '%3E'.freeze
+  LESS_THAN_EQUAL = '%3C%3D'.freeze
+  GREATER_THAN_EQUAL = '%3E%3D'.freeze
+  STARTS_WITH = 'START%20WITH'.freeze
 end
 
 module Fields

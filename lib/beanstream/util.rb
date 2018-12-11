@@ -1,6 +1,5 @@
 module Beanstream
   module Util
-
     def self.symbolize_names(object)
       case object
       when Hash

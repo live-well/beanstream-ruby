@@ -1,0 +1,27 @@
+AllCops:
+  Exclude:
+    - db/migrate/**/*
+    - db/schema.rb
+
+Layout/AlignHash:
+  EnforcedColonStyle: table
+
+Metrics/BlockLength:
+  ExcludedMethods: ['describe', 'context']
+
+Naming/UncommunicativeMethodParamName:
+  AllowedNames: ['_']
+
+Style/BlockDelimiters:
+  EnforcedStyle: braces_for_chaining
+
+Style/CharacterLiteral:
+  Enabled: false
+
+Style/MissingRespondToMissing:
+  Exclude:
+    - app/referees/**/*
+
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    '%w': ()
