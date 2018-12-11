@@ -29,17 +29,18 @@ describe Beanstream::ReportingAPI do
     results = search(
       1,
       10,
-      Beanstream::Criteria.new(Fields::OrderNumber, Operators::EQUALS, order_num1)
+      Beanstream::Criteria.new(:order_number, Operators::EQUALS, order_num1)
     )
     expect(results.length).to be(1)
+    expect(results[0]['trn_order_number']).to eq(order_num1)
 
     # Find Transactions 2 and 3 by ref1 and amount
     results = search(
       1,
       10,
       [
-        Beanstream::Criteria.new(Fields::Ref1, Operators::EQUALS, prefix),
-        Beanstream::Criteria.new(Fields::Amount, Operators::LESS_THAN, 50)
+        Beanstream::Criteria.new(:ref1, Operators::EQUALS, prefix),
+        Beanstream::Criteria.new(:amount, Operators::LESS_THAN, 50)
       ]
     )
     expect(results.length).to be(2)

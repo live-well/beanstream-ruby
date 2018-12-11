@@ -47,8 +47,35 @@ module Beanstream
   class Criteria
     attr_accessor :field, :operator, :value
 
+    FIELDS = {
+      transaction_id:     1,
+      amount:             2,
+      masked_card_number: 3,
+      card_owner:         4,
+      order_number:       5,
+      ip_ddress:          6,
+      authorization_code: 7,
+      trans_type:         8,
+      card_type:          9,
+      response:           10,
+      billing_name:       11,
+      billing_email:      12,
+      billing_phone:      13,
+      processed_by:       14,
+      ref1:               15,
+      ref2:               16,
+      ref3:               17,
+      ref4:               18,
+      ref5:               19,
+      product_name:       20,
+      product_id:         21,
+      cust_code:          22,
+      id_adjustment_to:   23,
+      id_adjusted_by:     24
+    }.freeze
+
     def initialize(field, operator, value)
-      @field = field
+      @field = field.is_a?(Symbol) ? FIELDS.fetch(field) : field
       @operator = operator
       @value = value
     end
@@ -66,31 +93,4 @@ module Operators
   LESS_THAN_EQUAL = '%3C%3D'.freeze
   GREATER_THAN_EQUAL = '%3E%3D'.freeze
   STARTS_WITH = 'START%20WITH'.freeze
-end
-
-module Fields
-  TransactionId = 1
-  Amount = 2
-  MaskedCardNumber = 3
-  CardOwner = 4
-  OrderNumber = 5
-  IPAddress = 6
-  AuthorizationCode = 7
-  TransType = 8
-  CardType = 9
-  Response = 10
-  BillingName = 11
-  BillingEmail = 12
-  BillingPhone = 13
-  ProcessedBy = 14
-  Ref1 = 15
-  Ref2 = 16
-  Ref3 = 17
-  Ref4 = 18
-  Ref5 = 19
-  ProductName = 20
-  ProductID = 21
-  CustCode = 22
-  IDAdjustmentTo = 23
-  IDAdjustedBy = 24
 end
