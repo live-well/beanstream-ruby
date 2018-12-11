@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.add_dependency('rest-client', '~> 2.0')
 
   s.add_development_dependency('rake')
+  s.add_development_dependency('rspec')
   s.add_development_dependency('rubocop')
   s.add_development_dependency('shoulda', '~> 3.4.0')
   s.add_development_dependency('test-unit')
