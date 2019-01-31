@@ -63,4 +63,48 @@ RSpec.describe Beanstream::PaymentsAPI do
 
     expect(PaymentsAPI.payment_approved(result)).to be(true)
   end
+
+  it 'handles a declined credit card payment' do
+    payment_details = {
+      order_number:   PaymentsAPI.generateRandomOrderId('test'),
+      amount:         100,
+      payment_method: Beanstream::PaymentMethods::CARD,
+      card:           {
+        name:         'Mr Card Testerson',
+        number:       '4003050500040005', # declined card
+        expiry_month: '07',
+        expiry_year:  '22',
+        cvd:          '123',
+        complete:     true
+      }
+    }
+
+    expect { api.make_payment(payment_details) }.to(raise_error { |error|
+      expect(error).to be_a(Beanstream::BeanstreamException)
+      expect(error.user_facing_message).to eq('DECLINE')
+      expect(error.is_user_error).to be(true)
+    })
+  end
+
+  it 'handles credit card pre-auth and completion' do
+    make_result = api.make_payment(
+      order_number:   PaymentsAPI.generateRandomOrderId('test'),
+      amount:         100,
+      payment_method: Beanstream::PaymentMethods::CARD,
+      card:           {
+        name:         'Mr. Card Testerson',
+        number:       '4030000010001234',
+        expiry_month: '07',
+        expiry_year:  '22',
+        cvd:          '123',
+        complete:     false
+      }
+    )
+
+    expect(PaymentsAPI.payment_approved(make_result)).to be(true)
+    transaction_id = make_result['id']
+
+    auth_result = api.complete_preauth(transaction_id, 59.50)
+    expect(PaymentsAPI.payment_approved(auth_result)).to be(true)
+  end
 end

@@ -9,66 +9,6 @@ module Beanstream
       Beanstream.payments_api_key = '4BaD82D9197b4cc4b70a221911eE9f70'
     end
 
-    # Card decline
-    should 'have declined credit card payment' do
-      decline = false
-      begin
-        Beanstream.PaymentsAPI.make_payment(
-          order_number:   PaymentsAPI.generateRandomOrderId('test'),
-          amount:         100,
-          payment_method: PaymentMethods::CARD,
-          card:           {
-            name:         'Mr Card Testerson',
-            number:       '4003050500040005', # declined card
-            expiry_month: '07',
-            expiry_year:  '22',
-            cvd:          '123',
-            complete:     true
-          }
-        )
-      rescue BeanstreamException => ex
-        decline = true
-
-        assert(ex.user_facing_message == 'DECLINE')
-        assert(ex.is_user_error)
-      end
-
-      assert(decline)
-    end
-
-    # PreAuth card
-    should 'have successful credit card pre-auth and completion' do
-      decline = false
-      begin
-        result = Beanstream.PaymentsAPI.make_payment(
-          order_number:   PaymentsAPI.generateRandomOrderId('test'),
-          amount:         100,
-          payment_method: PaymentMethods::CARD,
-          card:           {
-            name:         'Mr. Card Testerson',
-            number:       '4030000010001234',
-            expiry_month: '07',
-            expiry_year:  '22',
-            cvd:          '123',
-            complete:     false
-          }
-        )
-
-        assert(PaymentsAPI.payment_approved(result))
-        transaction_id = result['id']
-
-        result = Beanstream.PaymentsAPI.complete_preauth(transaction_id, 59.50)
-        assert(PaymentsAPI.payment_approved(result))
-      rescue BeanstreamException => ex
-        decline = true
-
-        assert(ex.user_facing_message == 'DECLINE')
-        assert(ex.is_user_error)
-      end
-
-      assert(!decline)
-    end
-
     # PreAuth token
     should 'pre-auth and complete successfully with a legato token' do
       # 1) get token (this is normally done in the client app)
