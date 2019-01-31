@@ -1,6 +1,6 @@
 require 'beanstream'
 
-describe Beanstream::Transaction do
+RSpec.describe Beanstream::Transaction do
   let(:transaction) { Beanstream::Transaction.new }
 
   it 'encodes predictably' do

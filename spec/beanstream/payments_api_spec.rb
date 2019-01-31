@@ -1,6 +1,6 @@
 require 'beanstream'
 
-describe Beanstream::PaymentsAPI do
+RSpec.describe Beanstream::PaymentsAPI do
   PaymentsAPI = Beanstream::PaymentsAPI
 
   before :each do
