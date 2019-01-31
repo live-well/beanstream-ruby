@@ -3,74 +3,10 @@ require 'beanstream'
 require 'shoulda'
 
 module Beanstream
-  class PaymentsAPITest < Test::Unit::TestCase
-    should 'canary test' do
-      assert true
-    end
-
-    should 'make payment url be the same' do
-      assert_equal('/v1/payments/', PaymentsAPI.new.make_payment_url)
-    end
-
-    should 'make return url be the same' do
-      assert_equal('/v1/payments/1234/returns', PaymentsAPI.new.payment_returns_url('1234'))
-    end
-
-    should 'make void url be the same' do
-      assert_equal('/v1/payments/1234/void', PaymentsAPI.new.payment_void_url('1234'))
-    end
-  end
-
   class PaymentsAPIIntegrationTest < Test::Unit::TestCase
     setup do
       Beanstream.merchant_id = '300200578'
       Beanstream.payments_api_key = '4BaD82D9197b4cc4b70a221911eE9f70'
-    end
-
-    # Card purchase
-    should 'have successful credit card payment' do
-      result = Beanstream.PaymentsAPI.make_payment(
-        order_number:   PaymentsAPI.generateRandomOrderId('test'),
-        amount:         100,
-        payment_method: PaymentMethods::CARD,
-        card:           {
-          name:         'Mr. Card Testerson',
-          number:       '4030000010001234',
-          expiry_month: '07',
-          expiry_year:  '22',
-          cvd:          '123',
-          complete:     true
-        }
-      )
-
-      assert(PaymentsAPI.payment_approved(result))
-    end
-
-    # Token purchase
-    should 'purchase successfully with a legato token' do
-      token = Beanstream.PaymentsAPI.get_legato_token(
-        number:       '4030000010001234',
-        expiry_month: '07',
-        expiry_year:  '22',
-        cvd:          '123'
-      )
-      assert(!token.nil?)
-
-      begin
-        result = Beanstream.PaymentsAPI.make_payment(
-          order_number:   PaymentsAPI.generateRandomOrderId('test'),
-          amount:         13.99,
-          payment_method: PaymentMethods::TOKEN,
-          token:          {
-            name:     'Bobby Test',
-            code:     token,
-            complete: true
-          }
-        )
-        assert(PaymentsAPI.payment_approved(result))
-      rescue BeanstreamException
-        assert(false)
-      end
     end
 
     # Card decline
