@@ -9,9 +9,11 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://dev.na.bambora.com/docs/'
   s.license     = 'MIT'
 
-  s.files = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- test/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
+  paths_to_names = ->(paths) { paths.map { |f| File.basename(f) } }
+
+  s.files         = `git ls-files`.split("\n")
+  s.test_files    = `git ls-files -- spec/*`.split("\n")
+  s.executables   = paths_to_names.call(`git ls-files -- bin/*`.split("\n"))
   s.require_paths = ['lib']
 
   s.add_dependency('json', '~> 2.1.0')
