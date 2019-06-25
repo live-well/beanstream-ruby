@@ -28,6 +28,10 @@ module Beanstream
         payload:      data.to_json
       }
 
+      if @sub_merchant_id
+        req_params[:headers][:'Sub-Merchant-Id'] = @sub_merchant_id
+      end
+
       begin
         result = RestClient::Request.execute(req_params)
         JSON.parse(result)

@@ -1,5 +1,9 @@
 module Beanstream
   class ProfilesAPI < Transaction
+    def initialize(sub_merchant_id = nil)
+      @sub_merchant_id = sub_merchant_id
+    end
+
     def profile_url
       "#{Beanstream.api_base_url}/profiles"
     end

@@ -1,5 +1,9 @@
 module Beanstream
   class ReportingAPI < Transaction
+    def initialize(sub_merchant_id = nil)
+      @sub_merchant_id = sub_merchant_id
+    end
+
     def reports_url
       "#{Beanstream.api_base_url}/reports"
     end

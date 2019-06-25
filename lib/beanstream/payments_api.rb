@@ -10,6 +10,10 @@ module Beanstream
   end
 
   class PaymentsAPI < Transaction
+    def initialize(sub_merchant_id = nil)
+      @sub_merchant_id = sub_merchant_id
+    end
+
     def self.generateRandomOrderId(prefix)
       "#{prefix}_#{SecureRandom.hex(8)}"
     end

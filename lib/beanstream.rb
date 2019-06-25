@@ -28,16 +28,16 @@ module Beanstream
     "/#{url_version}"
   end
 
-  def self.PaymentsAPI
-    Beanstream::PaymentsAPI.new
+  def self.PaymentsAPI(sub_merchant_id = nil)
+    Beanstream::PaymentsAPI.new(sub_merchant_id)
   end
 
-  def self.ProfilesAPI
-    Beanstream::ProfilesAPI.new
+  def self.ProfilesAPI(sub_merchant_id = nil)
+    Beanstream::ProfilesAPI.new(sub_merchant_id)
   end
 
-  def self.ReportingAPI
-    Beanstream::ReportingAPI.new
+  def self.ReportingAPI(sub_merchant_id = nil)
+    Beanstream::ReportingAPI.new(sub_merchant_id)
   end
 end
 
