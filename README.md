@@ -19,6 +19,15 @@ To install the SDK you just need to simply install the gem file:
 gem install beanstream --pre
 ```
 
+## Rspec Test Suite: ENV Variables
+Make sure to have the following ENV variables setup:
+```
+MERCHANT_ID=abc123
+PAYMENTS_API_KEY=xxx
+PROFILES_API_KEY=yyy
+REPORTING_API_KEY=zzz
+```
+
 # Code Sample
 Take a credit card Payment:
 ```ruby

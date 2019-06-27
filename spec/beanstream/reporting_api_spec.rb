@@ -2,9 +2,9 @@ require 'beanstream'
 
 RSpec.describe Beanstream::ReportingAPI do
   before :each do
-    Beanstream.merchant_id = '300200578'
-    Beanstream.payments_api_key = '4BaD82D9197b4cc4b70a221911eE9f70'
-    Beanstream.reporting_api_key = '4e6Ff318bee64EA391609de89aD4CF5d'
+    Beanstream.merchant_id = ENV['MERCHANT_ID']
+    Beanstream.payments_api_key = ENV['PAYMENTS_API_KEY']
+    Beanstream.reporting_api_key = ENV['REPORTING_API_KEY']
   end
 
   it 'makes the correct reports URL' do

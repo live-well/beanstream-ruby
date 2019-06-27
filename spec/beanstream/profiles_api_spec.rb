@@ -4,9 +4,9 @@ RSpec.describe Beanstream::ProfilesAPI do
   ProfilesAPI = Beanstream::ProfilesAPI
 
   before :each do
-    Beanstream.merchant_id = '300200578'
-    Beanstream.payments_api_key = '4BaD82D9197b4cc4b70a221911eE9f70'
-    Beanstream.profiles_api_key = 'D97D3BE1EE964A6193D17A571D9FBC80'
+    Beanstream.merchant_id = ENV['MERCHANT_ID']
+    Beanstream.payments_api_key = ENV['PAYMENTS_API_KEY']
+    Beanstream.profiles_api_key = ENV['PROFILES_API_KEY']
   end
 
   let(:api) { ProfilesAPI.new }
