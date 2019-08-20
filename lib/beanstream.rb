@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'beanstream/transaction'
 require 'beanstream/payments_api'
 require 'beanstream/profiles_api'
@@ -39,11 +41,4 @@ module Beanstream
   def self.ReportingAPI(sub_merchant_id = nil)
     Beanstream::ReportingAPI.new(sub_merchant_id)
   end
-end
-
-def run
-  Beanstream.merchant_id = '300200578'
-  Beanstream.payments_api_key = '4BaD82D9197b4cc4b70a221911eE9f70'
-  result = Beanstream.PaymentsAPI().make_creditcard_payment(12.5)
-  puts "Payment result: #{result}"
 end
