@@ -1,14 +1,17 @@
+# frozen_string_literal: true
+
 require 'beanstream'
 
 RSpec.describe Beanstream::PaymentsAPI do
   PaymentsAPI = Beanstream::PaymentsAPI
 
-  before :each do
-    Beanstream.merchant_id = ENV['MERCHANT_ID']
-    Beanstream.payments_api_key = ENV['PAYMENTS_API_KEY']
+  let(:api) do
+    PaymentsAPI.new(
+      merchant_id:      ENV['MERCHANT_ID'],
+      payments_api_key: ENV['PAYMENTS_API_KEY'],
+      sub_merchant_id:  nil
+    )
   end
-
-  let(:api) { PaymentsAPI.new }
 
   it 'builds the expected payment url' do
     expect(api.make_payment_url).to eq('/v1/payments/')
@@ -124,11 +127,11 @@ RSpec.describe Beanstream::PaymentsAPI do
       }
     }
 
-    expect { api.make_payment(payment_details) }.to(raise_error { |error|
+    expect { api.make_payment(payment_details) }.to(raise_error do |error|
       expect(error).to be_a(Beanstream::BeanstreamException)
       expect(error.user_facing_message).to eq('DECLINE')
       expect(error.is_user_error).to be(true)
-    })
+    end)
   end
 
   context 'with a valid legato token' do
