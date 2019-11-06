@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 Gem::Specification.new do |s|
   s.name        = 'beanstream'
-  s.version     = '1.0.0'
+  s.version     = '1.1.0'
   s.date        = '2015-11-19'
   s.summary     = 'Beanstream Ruby SDK'
   s.description = 'Accept payments using Beanstream and Ruby'
