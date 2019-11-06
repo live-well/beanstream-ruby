@@ -3,10 +3,8 @@
 require 'beanstream'
 
 RSpec.describe Beanstream::ProfilesAPI do
-  ProfilesAPI = Beanstream::ProfilesAPI
-
   let(:api) do
-    ProfilesAPI.new(
+    Beanstream::ProfilesAPI.new(
       merchant_id:      ENV['MERCHANT_ID'],
       profiles_api_key: ENV['PROFILES_API_KEY'],
       sub_merchant_id:  nil
@@ -14,7 +12,7 @@ RSpec.describe Beanstream::ProfilesAPI do
   end
 
   let(:payments_api) do
-    Beanstream.PaymentsAPI(
+    Beanstream::PaymentsAPI.new(
       merchant_id:      ENV['MERCHANT_ID'],
       payments_api_key: ENV['PAYMENTS_API_KEY'],
       sub_merchant_id:  nil
@@ -68,7 +66,7 @@ RSpec.describe Beanstream::ProfilesAPI do
       template[:billing] = template[:billing].merge(billing_for('Bob Test'))
 
       result = api.create_profile(template)
-      expect(ProfilesAPI.profile_successfully_created(result)).to be(true)
+      expect(Beanstream::ProfilesAPI.profile_successfully_created(result)).to be(true)
     end
 
     it 'with a legato token' do
@@ -80,7 +78,7 @@ RSpec.describe Beanstream::ProfilesAPI do
       template[:billing] = template[:billing].merge(billing_for('Bob Test'))
 
       result = api.create_profile(template)
-      expect(ProfilesAPI.profile_successfully_created(result)).to be(true)
+      expect(Beanstream::ProfilesAPI.profile_successfully_created(result)).to be(true)
     end
   end
 
@@ -93,10 +91,10 @@ RSpec.describe Beanstream::ProfilesAPI do
     end
 
     it 'can delete a profile' do
-      expect(ProfilesAPI.profile_successfully_created(profile)).to be(true)
+      expect(Beanstream::ProfilesAPI.profile_successfully_created(profile)).to be(true)
 
       result = api.delete_profile(profile['customer_code'])
-      expect(ProfilesAPI.profile_successfully_deleted(result)).to be(true)
+      expect(Beanstream::ProfilesAPI.profile_successfully_deleted(result)).to be(true)
     end
 
     it 'can retrieve a profile' do
@@ -127,7 +125,7 @@ RSpec.describe Beanstream::ProfilesAPI do
       card:    card_for('Hilary Test'),
       billing: billing_for('Hilary Test')
     )
-    expect(ProfilesAPI.profile_successfully_created(profile)).to be(true)
+    expect(Beanstream::ProfilesAPI.profile_successfully_created(profile)).to be(true)
     profile_id = profile['customer_code']
 
     profile1 = api.get_profile(profile_id)

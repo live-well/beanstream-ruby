@@ -4,14 +4,14 @@ require 'beanstream'
 
 RSpec.describe Beanstream::ReportingAPI do
   let(:payments_api) do
-    Beanstream.PaymentsAPI(
+    Beanstream::PaymentsAPI.new(
       merchant_id:      ENV['MERCHANT_ID'],
       payments_api_key: ENV['PAYMENTS_API_KEY'],
       sub_merchant_id:  nil
     )
   end
   let(:reporting_api) do
-    Beanstream.ReportingAPI(
+    Beanstream::ReportingAPI.new(
       merchant_id:       ENV['MERCHANT_ID'],
       reporting_api_key: ENV['REPORTING_API_KEY'],
       sub_merchant_id:   nil

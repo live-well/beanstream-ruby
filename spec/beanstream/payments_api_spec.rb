@@ -3,10 +3,8 @@
 require 'beanstream'
 
 RSpec.describe Beanstream::PaymentsAPI do
-  PaymentsAPI = Beanstream::PaymentsAPI
-
   let(:api) do
-    PaymentsAPI.new(
+    Beanstream::PaymentsAPI.new(
       merchant_id:      ENV['MERCHANT_ID'],
       payments_api_key: ENV['PAYMENTS_API_KEY'],
       sub_merchant_id:  nil
@@ -39,7 +37,7 @@ RSpec.describe Beanstream::PaymentsAPI do
 
     let(:complete_payment) do
       api.make_payment(
-        order_number:   PaymentsAPI.generateRandomOrderId('test'),
+        order_number:   Beanstream::PaymentsAPI.generateRandomOrderId('test'),
         amount:         100,
         payment_method: Beanstream::PaymentMethods::CARD,
         card:           card_info
@@ -48,7 +46,7 @@ RSpec.describe Beanstream::PaymentsAPI do
 
     let(:incomplete_payment) do
       api.make_payment(
-        order_number:   PaymentsAPI.generateRandomOrderId('test'),
+        order_number:   Beanstream::PaymentsAPI.generateRandomOrderId('test'),
         amount:         100,
         payment_method: Beanstream::PaymentMethods::CARD,
         card:           card_info.merge(complete: false)
@@ -67,16 +65,16 @@ RSpec.describe Beanstream::PaymentsAPI do
     end
 
     it 'approves a complete transaction' do
-      expect(PaymentsAPI.payment_approved(complete_payment)).to be(true)
+      expect(Beanstream::PaymentsAPI.payment_approved(complete_payment)).to be(true)
     end
 
     it 'approves an incomplete transaction' do
-      expect(PaymentsAPI.payment_approved(incomplete_payment)).to be(true)
+      expect(Beanstream::PaymentsAPI.payment_approved(incomplete_payment)).to be(true)
     end
 
     it 'handles pre-auth and completion' do
       result = api.complete_preauth(incomplete_id, 59.50)
-      expect(PaymentsAPI.payment_approved(result)).to be(true)
+      expect(Beanstream::PaymentsAPI.payment_approved(result)).to be(true)
     end
 
     it 'can get a transaction' do
@@ -114,7 +112,7 @@ RSpec.describe Beanstream::PaymentsAPI do
 
   it 'handles a declined credit card payment' do
     payment_details = {
-      order_number:   PaymentsAPI.generateRandomOrderId('test'),
+      order_number:   Beanstream::PaymentsAPI.generateRandomOrderId('test'),
       amount:         100,
       payment_method: Beanstream::PaymentMethods::CARD,
       card:           {
@@ -150,7 +148,7 @@ RSpec.describe Beanstream::PaymentsAPI do
 
     it 'successfully allows payment' do
       result = api.make_payment(
-        order_number:   PaymentsAPI.generateRandomOrderId('test'),
+        order_number:   Beanstream::PaymentsAPI.generateRandomOrderId('test'),
         amount:         13.99,
         payment_method: Beanstream::PaymentMethods::TOKEN,
         token:          {
@@ -160,12 +158,12 @@ RSpec.describe Beanstream::PaymentsAPI do
         }
       )
 
-      expect(PaymentsAPI.payment_approved(result)).to be(true)
+      expect(Beanstream::PaymentsAPI.payment_approved(result)).to be(true)
     end
 
     it 'handles legato token pre-auth and completion' do
       make_result = api.make_payment(
-        order_number:   PaymentsAPI.generateRandomOrderId('test'),
+        order_number:   Beanstream::PaymentsAPI.generateRandomOrderId('test'),
         amount:         13.99,
         payment_method: Beanstream::PaymentMethods::TOKEN,
         token:          {
@@ -174,11 +172,11 @@ RSpec.describe Beanstream::PaymentsAPI do
           complete: false
         }
       )
-      expect(PaymentsAPI.payment_approved(make_result)).to be(true)
+      expect(Beanstream::PaymentsAPI.payment_approved(make_result)).to be(true)
       transaction_id = make_result['id']
 
       auth_result = api.complete_preauth(transaction_id, 10.33)
-      expect(PaymentsAPI.payment_approved(auth_result)).to be(true)
+      expect(Beanstream::PaymentsAPI.payment_approved(auth_result)).to be(true)
     end
   end
 

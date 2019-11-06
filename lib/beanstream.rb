@@ -28,28 +28,4 @@ module Beanstream
   def self.api_base_url
     "/#{url_version}"
   end
-
-  def self.PaymentsAPI(merchant_id:, payments_api_key:, sub_merchant_id: nil)
-    Beanstream::PaymentsAPI.new(
-      merchant_id:      merchant_id,
-      payments_api_key: payments_api_key,
-      sub_merchant_id:  sub_merchant_id
-    )
-  end
-
-  def self.ProfilesAPI(merchant_id:, profiles_api_key:, sub_merchant_id: nil)
-    Beanstream::ProfilesAPI.new(
-      merchant_id:      merchant_id,
-      profiles_api_key: profiles_api_key,
-      sub_merchant_id:  sub_merchant_id
-    )
-  end
-
-  def self.ReportingAPI(merchant_id:, reporting_api_key:, sub_merchant_id: nil)
-    Beanstream::ReportingAPI.new(
-      merchant_id:       merchant_id,
-      reporting_api_key: reporting_api_key,
-      sub_merchant_id:   sub_merchant_id
-    )
-  end
 end
