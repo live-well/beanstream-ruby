@@ -1,15 +1,23 @@
+# frozen_string_literal: true
+
 require 'beanstream'
 
 RSpec.describe Beanstream::ProfilesAPI do
-  ProfilesAPI = Beanstream::ProfilesAPI
-
-  before :each do
-    Beanstream.merchant_id = ENV['MERCHANT_ID']
-    Beanstream.payments_api_key = ENV['PAYMENTS_API_KEY']
-    Beanstream.profiles_api_key = ENV['PROFILES_API_KEY']
+  let(:api) do
+    Beanstream::ProfilesAPI.new(
+      merchant_id:      ENV['MERCHANT_ID'],
+      profiles_api_key: ENV['PROFILES_API_KEY'],
+      sub_merchant_id:  nil
+    )
   end
 
-  let(:api) { ProfilesAPI.new }
+  let(:payments_api) do
+    Beanstream::PaymentsAPI.new(
+      merchant_id:      ENV['MERCHANT_ID'],
+      payments_api_key: ENV['PAYMENTS_API_KEY'],
+      sub_merchant_id:  nil
+    )
+  end
 
   def card_for(name)
     {
@@ -44,7 +52,7 @@ RSpec.describe Beanstream::ProfilesAPI do
 
   context 'can create a profile' do
     let(:token) do
-      Beanstream.PaymentsAPI.get_legato_token(
+      payments_api.get_legato_token(
         number:       '4030000010001234',
         expiry_month: '07',
         expiry_year:  '22',
@@ -58,7 +66,7 @@ RSpec.describe Beanstream::ProfilesAPI do
       template[:billing] = template[:billing].merge(billing_for('Bob Test'))
 
       result = api.create_profile(template)
-      expect(ProfilesAPI.profile_successfully_created(result)).to be(true)
+      expect(Beanstream::ProfilesAPI.profile_successfully_created(result)).to be(true)
     end
 
     it 'with a legato token' do
@@ -70,7 +78,7 @@ RSpec.describe Beanstream::ProfilesAPI do
       template[:billing] = template[:billing].merge(billing_for('Bob Test'))
 
       result = api.create_profile(template)
-      expect(ProfilesAPI.profile_successfully_created(result)).to be(true)
+      expect(Beanstream::ProfilesAPI.profile_successfully_created(result)).to be(true)
     end
   end
 
@@ -83,10 +91,10 @@ RSpec.describe Beanstream::ProfilesAPI do
     end
 
     it 'can delete a profile' do
-      expect(ProfilesAPI.profile_successfully_created(profile)).to be(true)
+      expect(Beanstream::ProfilesAPI.profile_successfully_created(profile)).to be(true)
 
       result = api.delete_profile(profile['customer_code'])
-      expect(ProfilesAPI.profile_successfully_deleted(result)).to be(true)
+      expect(Beanstream::ProfilesAPI.profile_successfully_deleted(result)).to be(true)
     end
 
     it 'can retrieve a profile' do
@@ -117,7 +125,7 @@ RSpec.describe Beanstream::ProfilesAPI do
       card:    card_for('Hilary Test'),
       billing: billing_for('Hilary Test')
     )
-    expect(ProfilesAPI.profile_successfully_created(profile)).to be(true)
+    expect(Beanstream::ProfilesAPI.profile_successfully_created(profile)).to be(true)
     profile_id = profile['customer_code']
 
     profile1 = api.get_profile(profile_id)
@@ -200,7 +208,6 @@ RSpec.describe Beanstream::ProfilesAPI do
       )
     end
     let(:profile_id) { profile['customer_code'] }
-    let(:payments_api) { Beanstream.PaymentsAPI }
 
     it 'can use a profile for a complete payment' do
       payment = payments_api.getProfilePaymentRequestTemplate

@@ -1,6 +1,10 @@
+# frozen_string_literal: true
+
 module Beanstream
   class ProfilesAPI < Transaction
-    def initialize(sub_merchant_id = nil)
+    def initialize(merchant_id:, profiles_api_key:, sub_merchant_id:)
+      @merchant_id = merchant_id
+      @profiles_api_key = profiles_api_key
       @sub_merchant_id = sub_merchant_id
     end
 
@@ -73,17 +77,17 @@ module Beanstream
     end
 
     def create_profile(profile)
-      transaction_post('POST', profile_url, Beanstream.merchant_id, Beanstream.profiles_api_key, profile)
+      transaction_post('POST', profile_url, @merchant_id, @profiles_api_key, profile)
     end
 
     def delete_profile(profileId)
       delUrl = profile_url + '/' + profileId
-      transaction_post('DELETE', delUrl, Beanstream.merchant_id, Beanstream.profiles_api_key, nil)
+      transaction_post('DELETE', delUrl, @merchant_id, @profiles_api_key, nil)
     end
 
     def get_profile(profileId)
       getUrl = profile_url + '/' + profileId
-      transaction_post('GET', getUrl, Beanstream.merchant_id, Beanstream.profiles_api_key, nil)
+      transaction_post('GET', getUrl, @merchant_id, @profiles_api_key, nil)
     end
 
     def update_profile(profile)
@@ -91,7 +95,7 @@ module Beanstream
       # remove card field for profile update. Card updates are done using update_profile_card()
       profile.tap { |h| h.delete('card') } unless profile['card'].nil?
 
-      transaction_post('PUT', getUrl, Beanstream.merchant_id, Beanstream.profiles_api_key, profile)
+      transaction_post('PUT', getUrl, @merchant_id, @profiles_api_key, profile)
     end
 
     def self.profile_successfully_created(response)
@@ -104,22 +108,22 @@ module Beanstream
 
     def add_profile_card(profile, card)
       addCardUrl = profile_url + '/' + profile['customer_code'] + '/cards/'
-      transaction_post('POST', addCardUrl, Beanstream.merchant_id, Beanstream.profiles_api_key, card)
+      transaction_post('POST', addCardUrl, @merchant_id, @profiles_api_key, card)
     end
 
     def get_profile_card(profile)
       getCardUrl = profile_url + '/' + profile['customer_code'] + '/cards/'
-      transaction_post('get', getCardUrl, Beanstream.merchant_id, Beanstream.profiles_api_key)
+      transaction_post('get', getCardUrl, @merchant_id, @profiles_api_key)
     end
 
     def update_profile_card(profile, card_index, card)
       updateUrl = profile_url + '/' + profile['customer_code'] + '/cards/' + card_index.to_s
-      transaction_post('PUT', updateUrl, Beanstream.merchant_id, Beanstream.profiles_api_key, card)
+      transaction_post('PUT', updateUrl, @merchant_id, @profiles_api_key, card)
     end
 
     def delete_profile_card(profile, card_index)
       deleteUrl = profile_url + '/' + profile['customer_code'] + '/cards/' + card_index.to_s
-      transaction_post('DELETE', deleteUrl, Beanstream.merchant_id, Beanstream.profiles_api_key, nil)
+      transaction_post('DELETE', deleteUrl, @merchant_id, @profiles_api_key, nil)
     end
   end
 end

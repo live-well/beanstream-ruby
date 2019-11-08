@@ -1,14 +1,24 @@
+# frozen_string_literal: true
+
 require 'beanstream'
 
 RSpec.describe Beanstream::ReportingAPI do
-  before :each do
-    Beanstream.merchant_id = ENV['MERCHANT_ID']
-    Beanstream.payments_api_key = ENV['PAYMENTS_API_KEY']
-    Beanstream.reporting_api_key = ENV['REPORTING_API_KEY']
+  let(:payments_api) do
+    Beanstream::PaymentsAPI.new(
+      merchant_id:      ENV['MERCHANT_ID'],
+      payments_api_key: ENV['PAYMENTS_API_KEY'],
+      sub_merchant_id:  nil
+    )
   end
-
+  let(:reporting_api) do
+    Beanstream::ReportingAPI.new(
+      merchant_id:       ENV['MERCHANT_ID'],
+      reporting_api_key: ENV['REPORTING_API_KEY'],
+      sub_merchant_id:   nil
+    )
+  end
   it 'makes the correct reports URL' do
-    expect(Beanstream.ReportingAPI.reports_url).to eq('/v1/reports')
+    expect(reporting_api.reports_url).to eq('/v1/reports')
   end
 
   it 'successfully finds payments' do
@@ -48,8 +58,7 @@ RSpec.describe Beanstream::ReportingAPI do
 
   def make_payment(prefix, order_number, amount)
     purchase = payment_info(prefix, order_number, amount)
-
-    result = Beanstream.PaymentsAPI.make_payment(purchase)
+    result = payments_api.make_payment(purchase)
     expect(Beanstream::PaymentsAPI.payment_approved(result)).to be(true)
   end
 
@@ -57,7 +66,7 @@ RSpec.describe Beanstream::ReportingAPI do
     last_3_hours = Time.now.getlocal('-08:00') - 3 * 60 * 60
     next_3_hours = Time.now.getlocal('-08:00') + 3 * 60 * 60
 
-    Beanstream.ReportingAPI.search_transactions(
+    reporting_api.search_transactions(
       last_3_hours,
       next_3_hours,
       start_row,

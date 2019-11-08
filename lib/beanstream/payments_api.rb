@@ -1,16 +1,20 @@
+# frozen_string_literal: true
+
 require 'securerandom'
 
 module Beanstream
   class PaymentMethods
-    CARD = 'card'.freeze
-    CASH = 'cash'.freeze
-    CHEQUE = 'cheque'.freeze
-    TOKEN = 'token'.freeze
-    PROFILE = 'payment_profile'.freeze
+    CARD = 'card'
+    CASH = 'cash'
+    CHEQUE = 'cheque'
+    TOKEN = 'token'
+    PROFILE = 'payment_profile'
   end
 
   class PaymentsAPI < Transaction
-    def initialize(sub_merchant_id = nil)
+    def initialize(merchant_id:, payments_api_key:, sub_merchant_id:)
+      @merchant_id = merchant_id
+      @payments_api_key = payments_api_key
       @sub_merchant_id = sub_merchant_id
     end
 
@@ -130,13 +134,13 @@ module Beanstream
     # or getProfilePaymentRequestTemplate().
     # +PreAuth+:: For a pre-auth you must set the 'complete' parameter of the Card, Token, or Profile to be 'false'.
     def make_payment(payment)
-      transaction_post('POST', make_payment_url, Beanstream.merchant_id, Beanstream.payments_api_key, payment)
+      transaction_post('POST', make_payment_url, @merchant_id, @payments_api_key, payment)
     end
 
     def complete_preauth(transaciton_id, amount)
       complete_url = make_payment_url + transaciton_id + '/completions'
       completion = { amount: amount }
-      transaction_post('POST', complete_url, Beanstream.merchant_id, Beanstream.payments_api_key, completion)
+      transaction_post('POST', complete_url, @merchant_id, @payments_api_key, completion)
     end
 
     def self.payment_approved(payment_response)
@@ -150,17 +154,17 @@ module Beanstream
     end
 
     def get_transaction(transaction_id)
-      transaction_post('GET', get_transaction_url(transaction_id), Beanstream.merchant_id, Beanstream.payments_api_key)
+      transaction_post('GET', get_transaction_url(transaction_id), @merchant_id, @payments_api_key)
     end
 
     def return_payment(transaction_id, amount)
       data = { amount: amount }
-      transaction_post('POST', payment_returns_url(transaction_id), Beanstream.merchant_id, Beanstream.payments_api_key, data)
+      transaction_post('POST', payment_returns_url(transaction_id), @merchant_id, @payments_api_key, data)
     end
 
     def void_payment(transaction_id, amount)
       data = { amount: amount }
-      transaction_post('POST', payment_void_url(transaction_id), Beanstream.merchant_id, Beanstream.payments_api_key, data)
+      transaction_post('POST', payment_void_url(transaction_id), @merchant_id, @payments_api_key, data)
     end
   end
 end

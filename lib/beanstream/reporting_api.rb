@@ -1,6 +1,10 @@
+# frozen_string_literal: true
+
 module Beanstream
   class ReportingAPI < Transaction
-    def initialize(sub_merchant_id = nil)
+    def initialize(merchant_id:, reporting_api_key:, sub_merchant_id:)
+      @merchant_id = merchant_id
+      @reporting_api_key = reporting_api_key
       @sub_merchant_id = sub_merchant_id
     end
 
@@ -16,7 +20,7 @@ module Beanstream
         raise InvalidRequestException.new(0, 0, 'end_date must be of type Time in ReportingApi.search_transactions', 0)
       end
 
-      if !criteria.nil? && !criteria.kind_of?(Array) && !criteria.is_a?(Beanstream::Criteria)
+      if !criteria.nil? && !criteria.is_a?(Array) && !criteria.is_a?(Beanstream::Criteria)
         puts "criteria was of type: #{criteria.class}"
         raise InvalidRequestException.new(0, 0, 'criteria must be of type Array<Critiera> or Criteria in ReportingApi.search_transactions', 0)
       end
@@ -43,7 +47,7 @@ module Beanstream
         'criteria' => criteria_hash
       }
       # puts "\n\nReport search query #{query}\n\n"
-      val = transaction_post('POST', reports_url, Beanstream.merchant_id, Beanstream.reporting_api_key, query)
+      val = transaction_post('POST', reports_url, @merchant_id, @reporting_api_key, query)
       val['records']
     end
   end
@@ -91,10 +95,10 @@ module Beanstream
 end
 
 module Operators
-  EQUALS = '%3D'.freeze
-  LESS_THAN = '%3C'.freeze
-  GREATER_THAN = '%3E'.freeze
-  LESS_THAN_EQUAL = '%3C%3D'.freeze
-  GREATER_THAN_EQUAL = '%3E%3D'.freeze
-  STARTS_WITH = 'START%20WITH'.freeze
+  EQUALS = '%3D'
+  LESS_THAN = '%3C'
+  GREATER_THAN = '%3E'
+  LESS_THAN_EQUAL = '%3C%3D'
+  GREATER_THAN_EQUAL = '%3E%3D'
+  STARTS_WITH = 'START%20WITH'
 end
