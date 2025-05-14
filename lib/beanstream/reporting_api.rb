@@ -2,10 +2,25 @@
 
 module Beanstream
   class ReportingAPI < Transaction
-    def initialize(merchant_id:, reporting_api_key:, sub_merchant_id:)
-      @merchant_id = merchant_id
-      @reporting_api_key = reporting_api_key
-      @sub_merchant_id = sub_merchant_id
+    def initialize(merchant_id: nil, reporting_api_key: nil, sub_merchant_id: nil, **kwargs)
+      if merchant_id.nil? && reporting_api_key.nil? && sub_merchant_id.nil? && kwargs.empty?
+        # No arguments provided
+        raise ArgumentError, "Missing required keyword arguments: merchant_id, reporting_api_key"
+      elsif merchant_id.nil? && reporting_api_key.nil? && sub_merchant_id.nil? && kwargs.is_a?(Hash)
+        # Single hash argument style (backward compatibility)
+        @merchant_id = kwargs[:merchant_id]
+        @reporting_api_key = kwargs[:reporting_api_key]
+        @sub_merchant_id = kwargs[:sub_merchant_id]
+      else
+        # Keyword arguments style (Ruby 3)
+        @merchant_id = merchant_id
+        @reporting_api_key = reporting_api_key
+        @sub_merchant_id = sub_merchant_id
+      end
+
+      # Validate required fields
+      raise ArgumentError, "merchant_id is required" if @merchant_id.nil?
+      raise ArgumentError, "reporting_api_key is required" if @reporting_api_key.nil?
     end
 
     def reports_url

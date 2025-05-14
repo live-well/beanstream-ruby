@@ -2,8 +2,8 @@
 
 Gem::Specification.new do |s|
   s.name        = 'beanstream'
-  s.version     = '2.0.1'
-  s.date        = '2025-05-13'
+  s.version     = '2.1.0'
+  s.date        = '2025-05-14'
   s.summary     = 'Beanstream Ruby SDK'
   s.description = 'Accept payments using Beanstream and Ruby'
   s.authors     = ['Brent Owens', 'Colin Walker', 'Tom Mengda']

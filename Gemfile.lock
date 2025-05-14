@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    beanstream (2.0.1)
+    beanstream (2.1.0)
       json (~> 2.6.3)
       rest-client (~> 2.0)
 
