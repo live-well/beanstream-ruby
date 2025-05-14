@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name        = 'beanstream'
-  s.version     = '2.1.0'
+  s.version     = '2.1.1'
   s.date        = '2025-05-14'
   s.summary     = 'Beanstream Ruby SDK'
   s.description = 'Accept payments using Beanstream and Ruby'

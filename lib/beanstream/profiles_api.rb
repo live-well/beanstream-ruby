@@ -2,25 +2,10 @@
 
 module Beanstream
   class ProfilesAPI < Transaction
-    def initialize(merchant_id: nil, profiles_api_key: nil, sub_merchant_id: nil, **kwargs)
-      if merchant_id.nil? && profiles_api_key.nil? && sub_merchant_id.nil? && kwargs.empty?
-        # No arguments provided
-        raise ArgumentError, "Missing required keyword arguments: merchant_id, profiles_api_key"
-      elsif merchant_id.nil? && profiles_api_key.nil? && sub_merchant_id.nil? && kwargs.is_a?(Hash)
-        # Single hash argument style (backward compatibility)
-        @merchant_id = kwargs[:merchant_id]
-        @profiles_api_key = kwargs[:profiles_api_key]
-        @sub_merchant_id = kwargs[:sub_merchant_id]
-      else
-        # Keyword arguments style (Ruby 3)
-        @merchant_id = merchant_id
-        @profiles_api_key = profiles_api_key
-        @sub_merchant_id = sub_merchant_id
-      end
-
-      # Validate required fields
-      raise ArgumentError, "merchant_id is required" if @merchant_id.nil?
-      raise ArgumentError, "profiles_api_key is required" if @profiles_api_key.nil?
+    def initialize(merchant_id:, profiles_api_key:, sub_merchant_id:)
+      @merchant_id = merchant_id
+      @profiles_api_key = profiles_api_key
+      @sub_merchant_id = sub_merchant_id
     end
 
     def profile_url
