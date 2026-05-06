@@ -11,7 +11,9 @@ module Beanstream
   @url_prefix = 'api.na'
   @url_base = 'bambora.com'
   @url_version = 'v1'
-  @ssl_ca_cert = File.dirname(__FILE__) + '/resources/cacert.pem'
+  # By default, rely on the host system trust store.
+  # Set BEANSTREAM_SSL_CA_CERT_PATH to opt in to a custom CA bundle.
+  @ssl_ca_cert = ENV['BEANSTREAM_SSL_CA_CERT_PATH']
   @timeout = 80
   @open_timeout = 40
 

@@ -12,6 +12,13 @@ For very detailed information on the Payments API, look at the Bambora [develope
 # TLS 1.2 support
 For testing instructions with our TLS1.2-only server, please refer to our [developer portal](https://dev.na.bambora.com/docs/references/payment_SDKs/support_tls12/#ruby-sdk)
 
+## TLS trust store
+By default, this SDK uses the operating system trust store for TLS certificate validation.
+
+If you need to provide a custom CA bundle, set:
+```
+BEANSTREAM_SSL_CA_CERT_PATH=/path/to/cacert.pem
+```
 
 # Setup
 To install the SDK you just need to simply install the gem file:

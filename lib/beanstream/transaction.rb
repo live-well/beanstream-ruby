@@ -16,7 +16,6 @@ module Beanstream
 
       req_params = {
         verify_ssl:   OpenSSL::SSL::VERIFY_PEER,
-        ssl_ca_file:  Beanstream.ssl_ca_cert,
         timeout:      Beanstream.timeout,
         open_timeout: Beanstream.open_timeout,
         headers:      {
@@ -27,6 +26,10 @@ module Beanstream
         url:          path,
         payload:      data.to_json
       }
+
+      if Beanstream.ssl_ca_cert && !Beanstream.ssl_ca_cert.empty?
+        req_params[:ssl_ca_file] = Beanstream.ssl_ca_cert
+      end
 
       if @sub_merchant_id
         req_params[:headers][:'Sub-Merchant-Id'] = @sub_merchant_id
